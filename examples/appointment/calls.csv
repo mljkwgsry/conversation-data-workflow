@@ -1,0 +1,9 @@
+﻿call_id,customer_id,call_time,asr_result
+demo-1,001,2026-01-01 09:00:00,"Customer: I would like an appointment.
+Agent: What day works for you?"
+demo-2,001,2026-01-01 10:00:00,"Customer: Please confirm my booking.
+Agent: I will check the booking record."
+demo-3,1,2026-01-01 11:00:00,"Customer: I need more information.
+Agent: What would you like to know?"
+demo-4,002,2026-01-01 12:00:00,"Customer: Please call me tomorrow.
+Agent: What time is convenient?"

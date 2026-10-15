@@ -1,0 +1,6 @@
+interface:
+  display_name: "通用对话数据与Prompt工作流"
+  short_description: "可配置场景的数据提取、标注、分析、测试与Prompt迭代，支持单步和组合执行"
+  default_prompt: "使用 $conversation-data-workflow，读取场景配置，执行我指定的数据处理或Prompt迭代步骤。"
+policy:
+  allow_implicit_invocation: true

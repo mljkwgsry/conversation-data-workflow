@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "project_id": "custom-project",
+  "output_root": "./workflow-output",
+  "interfaces": {
+    "buildstore_url": "https://admin.buildstore.cn/",
+    "gateway_base_url": "http://112.13.90.15:60035",
+    "api_document": "../references/gateway-api-source.md"
+  },
+  "execution": {
+    "global_max_inflight": 8,
+    "request_timeout_seconds": 120,
+    "max_transport_attempts": 3,
+    "max_requests": null
+  },
+  "generation": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 1024,
+    "stream": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "scenes": [
+    {
+      "id": "custom-scene",
+      "product": null,
+      "language": null,
+      "country": null,
+      "timezone": null,
+      "data_source": null,
+      "time_window": null,
+      "project_value": null,
+      "list_token": null,
+      "data_dir": null,
+      "extract_kinds": [
+        "calls",
+        "outcomes"
+      ],
+      "inputs": {
+        "calls": [],
+        "outcomes": [],
+        "identity_map": null,
+        "report": null,
+        "testset": null,
+        "suite": null
+      },
+      "fields": {
+        "call_id": "call_id",
+        "fallback_id": "id",
+        "phone": "phone_number",
+        "project": "call_log.cooperatorName",
+        "call_log": "call_log",
+        "voice": "voice_url",
+        "asr": "asr_result",
+        "call_time": "call_time",
+        "outcome_phone": null,
+        "task_keys": [
+          "Token",
+          "批次任务ID",
+          "子任务ID"
+        ],
+        "outcome_time": "更新时间"
+      },
+      "identity": {
+        "kind": "phone",
+        "normalize": "exact",
+        "call_key": null,
+        "outcome_key": null
+      },
+      "outcome": {
+        "event": null,
+        "column": "目标事件名单匹配",
+        "positive": "Yes",
+        "negative": "No",
+        "membership_basis": null
+      },
+      "policy": {},
+      "analysis": {
+        "dimensions": [
+          "date",
+          "call_count"
+        ],
+        "metrics": [
+          "list_membership_rate"
+        ],
+        "case_review_count": 8
+      },
+      "testset": {
+        "real_count": null,
+        "synthetic_count": null,
+        "seed": 42,
+        "max_per_call": 1,
+        "role_labels": null,
+        "synthetic_path": null
+      },
+      "evaluation": {
+        "mode": "generate",
+        "archive": null,
+        "baseline": null,
+        "candidate": null,
+        "suite_version": null,
+        "fixture": {},
+        "fixture_source": null,
+        "rubric": null,
+        "rubric_version": null
+      },
+      "multiturn": {
+        "user_endpoint": "http://112.13.90.15:60035/v1/chat/completions",
+        "persona_path": null,
+        "start_mode": "scenario_seed",
+        "repeats": 3,
+        "max_service_turns": 12,
+        "timeout_seconds": 600,
+        "end_markers": []
+      },
+      "iteration": {
+        "parent_path": null,
+        "target_version": null,
+        "prompt_dir": null
+      }
+    }
+  ]
+}

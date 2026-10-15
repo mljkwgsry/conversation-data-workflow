@@ -1,0 +1,131 @@
+{
+  "schema_version": 1,
+  "project_id": "fictional-appointment-demo",
+  "output_root": "./output",
+  "interfaces": {
+    "buildstore_url": "https://admin.buildstore.cn/",
+    "gateway_base_url": "http://112.13.90.15:60035",
+    "api_document": "../../references/gateway-api-source.md"
+  },
+  "execution": {
+    "global_max_inflight": 8,
+    "request_timeout_seconds": 120,
+    "max_transport_attempts": 3,
+    "max_requests": null
+  },
+  "generation": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 1024,
+    "stream": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "scenes": [
+    {
+      "id": "appointment-demo",
+      "product": "DemoCare (fictional)",
+      "language": "English",
+      "country": "KE",
+      "timezone": null,
+      "data_source": null,
+      "time_window": null,
+      "project_value": null,
+      "list_token": null,
+      "data_dir": null,
+      "extract_kinds": [
+        "calls",
+        "outcomes"
+      ],
+      "inputs": {
+        "calls": [
+          "calls.csv"
+        ],
+        "outcomes": [
+          "appointments.csv"
+        ],
+        "identity_map": null,
+        "report": null,
+        "testset": null,
+        "suite": null
+      },
+      "fields": {
+        "call_id": "call_id",
+        "fallback_id": "call_id",
+        "phone": null,
+        "project": null,
+        "call_log": null,
+        "voice": null,
+        "asr": "asr_result",
+        "call_time": "call_time",
+        "outcome_phone": null,
+        "task_keys": [],
+        "outcome_time": "recorded_at"
+      },
+      "identity": {
+        "kind": "exact_id",
+        "normalize": "exact",
+        "call_key": "customer_id",
+        "outcome_key": "customer_id"
+      },
+      "outcome": {
+        "event": "appointment_list_membership",
+        "column": "预约名单匹配",
+        "positive": "Yes",
+        "negative": "No",
+        "membership_basis": "虚构示例：appointments.csv为已确认预约名单，仅用于离线演示。"
+      },
+      "policy": {
+        "source": "synthetic_demo",
+        "confirmation_rule": "Only the supplied appointment list is confirmation evidence."
+      },
+      "analysis": {
+        "dimensions": [
+          "date",
+          "call_count"
+        ],
+        "metrics": [
+          "list_membership_rate"
+        ],
+        "case_review_count": 8
+      },
+      "testset": {
+        "real_count": null,
+        "synthetic_count": null,
+        "seed": 42,
+        "max_per_call": 1,
+        "role_labels": {
+          "user": "Customer",
+          "assistant": "Agent"
+        },
+        "synthetic_path": null
+      },
+      "evaluation": {
+        "mode": "generate",
+        "archive": null,
+        "baseline": null,
+        "candidate": null,
+        "suite_version": null,
+        "fixture": {},
+        "fixture_source": null,
+        "rubric": null,
+        "rubric_version": null
+      },
+      "multiturn": {
+        "user_endpoint": "http://112.13.90.15:60035/v1/chat/completions",
+        "persona_path": null,
+        "start_mode": "scenario_seed",
+        "repeats": 3,
+        "max_service_turns": 12,
+        "timeout_seconds": 600,
+        "end_markers": []
+      },
+      "iteration": {
+        "parent_path": null,
+        "target_version": null,
+        "prompt_dir": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,711 @@
+{
+  "schema_version": 1,
+  "project_id": "okash",
+  "output_root": "./workflow-output",
+  "interfaces": {
+    "buildstore_url": "https://admin.buildstore.cn/",
+    "gateway_base_url": "http://112.13.90.15:60035",
+    "api_document": "../references/gateway-api-source.md"
+  },
+  "execution": {
+    "global_max_inflight": 8,
+    "request_timeout_seconds": 120,
+    "max_transport_attempts": 3,
+    "max_requests": null
+  },
+  "generation": {
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "max_tokens": 1024,
+    "stream": false,
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "scenes": [
+    {
+      "id": "m2-none",
+      "product": "OKash",
+      "language": "English",
+      "country": "NG",
+      "timezone": null,
+      "data_source": "尼日利亚",
+      "time_window": {
+        "preset": "近7天（含归档）"
+      },
+      "project_value": null,
+      "list_token": null,
+      "data_dir": "./data/m2-none",
+      "extract_kinds": [
+        "calls",
+        "outcomes"
+      ],
+      "inputs": {
+        "calls": [],
+        "outcomes": [],
+        "identity_map": null,
+        "report": null,
+        "testset": null,
+        "suite": null
+      },
+      "fields": {
+        "call_id": "call_id",
+        "fallback_id": "id",
+        "phone": "phone_number",
+        "project": "call_log.cooperatorName",
+        "call_log": "call_log",
+        "voice": "voice_url",
+        "asr": "asr_result",
+        "call_time": "call_time",
+        "outcome_phone": null,
+        "task_keys": [
+          "Token",
+          "批次任务ID",
+          "子任务ID"
+        ],
+        "outcome_time": "更新时间"
+      },
+      "identity": {
+        "kind": "phone",
+        "normalize": "ng_e164",
+        "call_key": null,
+        "outcome_key": null
+      },
+      "outcome": {
+        "event": "repayment_list_membership",
+        "column": "是否已还款",
+        "positive": "Yes",
+        "negative": "No",
+        "membership_basis": null
+      },
+      "policy": {
+        "penalty_discount_percent": 0,
+        "discount_basis": "eligible_penalty_only",
+        "principal_discount_percent": 0,
+        "interest_discount_percent": 0,
+        "source": "结构示例；正式政策需由使用者核实并提供依据",
+        "bucket_definition": "未在本配置核实，不由M段名称推断边界"
+      },
+      "analysis": {
+        "dimensions": [
+          "amount",
+          "overdue_days",
+          "amount_x_overdue_days",
+          "date",
+          "call_count",
+          "duration"
+        ],
+        "metrics": [
+          "list_membership_rate"
+        ],
+        "case_review_count": 8
+      },
+      "testset": {
+        "real_count": 200,
+        "synthetic_count": 100,
+        "seed": 42,
+        "max_per_call": 1,
+        "role_labels": {
+          "user": "用户",
+          "assistant": "客服"
+        },
+        "synthetic_path": null
+      },
+      "evaluation": {
+        "mode": "generate",
+        "archive": null,
+        "baseline": null,
+        "candidate": null,
+        "suite_version": null,
+        "fixture": {},
+        "fixture_source": null,
+        "rubric": null,
+        "rubric_version": null
+      },
+      "multiturn": {
+        "user_endpoint": "http://112.13.90.15:60035/v1/chat/completions",
+        "persona_path": null,
+        "start_mode": "scenario_seed",
+        "repeats": 3,
+        "max_service_turns": 12,
+        "timeout_seconds": 600,
+        "end_markers": []
+      },
+      "iteration": {
+        "parent_path": null,
+        "target_version": null,
+        "prompt_dir": "./prompts/m2-none"
+      }
+    },
+    {
+      "id": "m2-penalty50",
+      "product": "OKash",
+      "language": "English",
+      "country": "NG",
+      "timezone": null,
+      "data_source": "尼日利亚",
+      "time_window": {
+        "preset": "近7天（含归档）"
+      },
+      "project_value": null,
+      "list_token": null,
+      "data_dir": "./data/m2-penalty50",
+      "extract_kinds": [
+        "calls",
+        "outcomes"
+      ],
+      "inputs": {
+        "calls": [],
+        "outcomes": [],
+        "identity_map": null,
+        "report": null,
+        "testset": null,
+        "suite": null
+      },
+      "fields": {
+        "call_id": "call_id",
+        "fallback_id": "id",
+        "phone": "phone_number",
+        "project": "call_log.cooperatorName",
+        "call_log": "call_log",
+        "voice": "voice_url",
+        "asr": "asr_result",
+        "call_time": "call_time",
+        "outcome_phone": null,
+        "task_keys": [
+          "Token",
+          "批次任务ID",
+          "子任务ID"
+        ],
+        "outcome_time": "更新时间"
+      },
+      "identity": {
+        "kind": "phone",
+        "normalize": "ng_e164",
+        "call_key": null,
+        "outcome_key": null
+      },
+      "outcome": {
+        "event": "repayment_list_membership",
+        "column": "是否已还款",
+        "positive": "Yes",
+        "negative": "No",
+        "membership_basis": null
+      },
+      "policy": {
+        "penalty_discount_percent": 50,
+        "discount_basis": "eligible_penalty_only",
+        "principal_discount_percent": 0,
+        "interest_discount_percent": 0,
+        "source": "结构示例；正式政策需由使用者核实并提供依据",
+        "bucket_definition": "未在本配置核实，不由M段名称推断边界"
+      },
+      "analysis": {
+        "dimensions": [
+          "amount",
+          "overdue_days",
+          "amount_x_overdue_days",
+          "date",
+          "call_count",
+          "duration"
+        ],
+        "metrics": [
+          "list_membership_rate"
+        ],
+        "case_review_count": 8
+      },
+      "testset": {
+        "real_count": 200,
+        "synthetic_count": 100,
+        "seed": 42,
+        "max_per_call": 1,
+        "role_labels": {
+          "user": "用户",
+          "assistant": "客服"
+        },
+        "synthetic_path": null
+      },
+      "evaluation": {
+        "mode": "generate",
+        "archive": null,
+        "baseline": null,
+        "candidate": null,
+        "suite_version": null,
+        "fixture": {},
+        "fixture_source": null,
+        "rubric": null,
+        "rubric_version": null
+      },
+      "multiturn": {
+        "user_endpoint": "http://112.13.90.15:60035/v1/chat/completions",
+        "persona_path": null,
+        "start_mode": "scenario_seed",
+        "repeats": 3,
+        "max_service_turns": 12,
+        "timeout_seconds": 600,
+        "end_markers": []
+      },
+      "iteration": {
+        "parent_path": null,
+        "target_version": null,
+        "prompt_dir": "./prompts/m2-penalty50"
+      }
+    },
+    {
+      "id": "m2-penalty100",
+      "product": "OKash",
+      "language": "English",
+      "country": "NG",
+      "timezone": null,
+      "data_source": "尼日利亚",
+      "time_window": {
+        "preset": "近7天（含归档）"
+      },
+      "project_value": null,
+      "list_token": null,
+      "data_dir": "./data/m2-penalty100",
+      "extract_kinds": [
+        "calls",
+        "outcomes"
+      ],
+      "inputs": {
+        "calls": [],
+        "outcomes": [],
+        "identity_map": null,
+        "report": null,
+        "testset": null,
+        "suite": null
+      },
+      "fields": {
+        "call_id": "call_id",
+        "fallback_id": "id",
+        "phone": "phone_number",
+        "project": "call_log.cooperatorName",
+        "call_log": "call_log",
+        "voice": "voice_url",
+        "asr": "asr_result",
+        "call_time": "call_time",
+        "outcome_phone": null,
+        "task_keys": [
+          "Token",
+          "批次任务ID",
+          "子任务ID"
+        ],
+        "outcome_time": "更新时间"
+      },
+      "identity": {
+        "kind": "phone",
+        "normalize": "ng_e164",
+        "call_key": null,
+        "outcome_key": null
+      },
+      "outcome": {
+        "event": "repayment_list_membership",
+        "column": "是否已还款",
+        "positive": "Yes",
+        "negative": "No",
+        "membership_basis": null
+      },
+      "policy": {
+        "penalty_discount_percent": 100,
+        "discount_basis": "eligible_penalty_only",
+        "principal_discount_percent": 0,
+        "interest_discount_percent": 0,
+        "source": "结构示例；正式政策需由使用者核实并提供依据",
+        "bucket_definition": "未在本配置核实，不由M段名称推断边界"
+      },
+      "analysis": {
+        "dimensions": [
+          "amount",
+          "overdue_days",
+          "amount_x_overdue_days",
+          "date",
+          "call_count",
+          "duration"
+        ],
+        "metrics": [
+          "list_membership_rate"
+        ],
+        "case_review_count": 8
+      },
+      "testset": {
+        "real_count": 200,
+        "synthetic_count": 100,
+        "seed": 42,
+        "max_per_call": 1,
+        "role_labels": {
+          "user": "用户",
+          "assistant": "客服"
+        },
+        "synthetic_path": null
+      },
+      "evaluation": {
+        "mode": "generate",
+        "archive": null,
+        "baseline": null,
+        "candidate": null,
+        "suite_version": null,
+        "fixture": {},
+        "fixture_source": null,
+        "rubric": null,
+        "rubric_version": null
+      },
+      "multiturn": {
+        "user_endpoint": "http://112.13.90.15:60035/v1/chat/completions",
+        "persona_path": null,
+        "start_mode": "scenario_seed",
+        "repeats": 3,
+        "max_service_turns": 12,
+        "timeout_seconds": 600,
+        "end_markers": []
+      },
+      "iteration": {
+        "parent_path": null,
+        "target_version": null,
+        "prompt_dir": "./prompts/m2-penalty100"
+      }
+    },
+    {
+      "id": "m3-none",
+      "product": "OKash",
+      "language": "Nigerian Pidgin",
+      "country": "NG",
+      "timezone": null,
+      "data_source": "尼日利亚",
+      "time_window": {
+        "preset": "近7天（含归档）"
+      },
+      "project_value": null,
+      "list_token": null,
+      "data_dir": "./data/m3-none",
+      "extract_kinds": [
+        "calls",
+        "outcomes"
+      ],
+      "inputs": {
+        "calls": [],
+        "outcomes": [],
+        "identity_map": null,
+        "report": null,
+        "testset": null,
+        "suite": null
+      },
+      "fields": {
+        "call_id": "call_id",
+        "fallback_id": "id",
+        "phone": "phone_number",
+        "project": "call_log.cooperatorName",
+        "call_log": "call_log",
+        "voice": "voice_url",
+        "asr": "asr_result",
+        "call_time": "call_time",
+        "outcome_phone": null,
+        "task_keys": [
+          "Token",
+          "批次任务ID",
+          "子任务ID"
+        ],
+        "outcome_time": "更新时间"
+      },
+      "identity": {
+        "kind": "phone",
+        "normalize": "ng_e164",
+        "call_key": null,
+        "outcome_key": null
+      },
+      "outcome": {
+        "event": "repayment_list_membership",
+        "column": "是否已还款",
+        "positive": "Yes",
+        "negative": "No",
+        "membership_basis": null
+      },
+      "policy": {
+        "penalty_discount_percent": 0,
+        "discount_basis": "eligible_penalty_only",
+        "principal_discount_percent": 0,
+        "interest_discount_percent": 0,
+        "source": "结构示例；正式政策需由使用者核实并提供依据",
+        "bucket_definition": "未在本配置核实，不由M段名称推断边界"
+      },
+      "analysis": {
+        "dimensions": [
+          "amount",
+          "overdue_days",
+          "amount_x_overdue_days",
+          "date",
+          "call_count",
+          "duration"
+        ],
+        "metrics": [
+          "list_membership_rate"
+        ],
+        "case_review_count": 8
+      },
+      "testset": {
+        "real_count": 200,
+        "synthetic_count": 100,
+        "seed": 42,
+        "max_per_call": 1,
+        "role_labels": {
+          "user": "用户",
+          "assistant": "客服"
+        },
+        "synthetic_path": null
+      },
+      "evaluation": {
+        "mode": "generate",
+        "archive": null,
+        "baseline": null,
+        "candidate": null,
+        "suite_version": null,
+        "fixture": {},
+        "fixture_source": null,
+        "rubric": null,
+        "rubric_version": null
+      },
+      "multiturn": {
+        "user_endpoint": "http://112.13.90.15:60035/v1/chat/completions",
+        "persona_path": null,
+        "start_mode": "scenario_seed",
+        "repeats": 3,
+        "max_service_turns": 12,
+        "timeout_seconds": 600,
+        "end_markers": []
+      },
+      "iteration": {
+        "parent_path": null,
+        "target_version": null,
+        "prompt_dir": "./prompts/m3-none"
+      }
+    },
+    {
+      "id": "m3-penalty50",
+      "product": "OKash",
+      "language": "English",
+      "country": "NG",
+      "timezone": null,
+      "data_source": "尼日利亚",
+      "time_window": {
+        "preset": "近7天（含归档）"
+      },
+      "project_value": null,
+      "list_token": null,
+      "data_dir": "./data/m3-penalty50",
+      "extract_kinds": [
+        "calls",
+        "outcomes"
+      ],
+      "inputs": {
+        "calls": [],
+        "outcomes": [],
+        "identity_map": null,
+        "report": null,
+        "testset": null,
+        "suite": null
+      },
+      "fields": {
+        "call_id": "call_id",
+        "fallback_id": "id",
+        "phone": "phone_number",
+        "project": "call_log.cooperatorName",
+        "call_log": "call_log",
+        "voice": "voice_url",
+        "asr": "asr_result",
+        "call_time": "call_time",
+        "outcome_phone": null,
+        "task_keys": [
+          "Token",
+          "批次任务ID",
+          "子任务ID"
+        ],
+        "outcome_time": "更新时间"
+      },
+      "identity": {
+        "kind": "phone",
+        "normalize": "ng_e164",
+        "call_key": null,
+        "outcome_key": null
+      },
+      "outcome": {
+        "event": "repayment_list_membership",
+        "column": "是否已还款",
+        "positive": "Yes",
+        "negative": "No",
+        "membership_basis": null
+      },
+      "policy": {
+        "penalty_discount_percent": 50,
+        "discount_basis": "eligible_penalty_only",
+        "principal_discount_percent": 0,
+        "interest_discount_percent": 0,
+        "source": "结构示例；正式政策需由使用者核实并提供依据",
+        "bucket_definition": "未在本配置核实，不由M段名称推断边界"
+      },
+      "analysis": {
+        "dimensions": [
+          "amount",
+          "overdue_days",
+          "amount_x_overdue_days",
+          "date",
+          "call_count",
+          "duration"
+        ],
+        "metrics": [
+          "list_membership_rate"
+        ],
+        "case_review_count": 8
+      },
+      "testset": {
+        "real_count": 200,
+        "synthetic_count": 100,
+        "seed": 42,
+        "max_per_call": 1,
+        "role_labels": {
+          "user": "用户",
+          "assistant": "客服"
+        },
+        "synthetic_path": null
+      },
+      "evaluation": {
+        "mode": "generate",
+        "archive": null,
+        "baseline": null,
+        "candidate": null,
+        "suite_version": null,
+        "fixture": {},
+        "fixture_source": null,
+        "rubric": null,
+        "rubric_version": null
+      },
+      "multiturn": {
+        "user_endpoint": "http://112.13.90.15:60035/v1/chat/completions",
+        "persona_path": null,
+        "start_mode": "scenario_seed",
+        "repeats": 3,
+        "max_service_turns": 12,
+        "timeout_seconds": 600,
+        "end_markers": []
+      },
+      "iteration": {
+        "parent_path": null,
+        "target_version": null,
+        "prompt_dir": "./prompts/m3-penalty50"
+      }
+    },
+    {
+      "id": "m3-penalty100",
+      "product": "OKash",
+      "language": "English",
+      "country": "NG",
+      "timezone": null,
+      "data_source": "尼日利亚",
+      "time_window": {
+        "preset": "近7天（含归档）"
+      },
+      "project_value": null,
+      "list_token": null,
+      "data_dir": "./data/m3-penalty100",
+      "extract_kinds": [
+        "calls",
+        "outcomes"
+      ],
+      "inputs": {
+        "calls": [],
+        "outcomes": [],
+        "identity_map": null,
+        "report": null,
+        "testset": null,
+        "suite": null
+      },
+      "fields": {
+        "call_id": "call_id",
+        "fallback_id": "id",
+        "phone": "phone_number",
+        "project": "call_log.cooperatorName",
+        "call_log": "call_log",
+        "voice": "voice_url",
+        "asr": "asr_result",
+        "call_time": "call_time",
+        "outcome_phone": null,
+        "task_keys": [
+          "Token",
+          "批次任务ID",
+          "子任务ID"
+        ],
+        "outcome_time": "更新时间"
+      },
+      "identity": {
+        "kind": "phone",
+        "normalize": "ng_e164",
+        "call_key": null,
+        "outcome_key": null
+      },
+      "outcome": {
+        "event": "repayment_list_membership",
+        "column": "是否已还款",
+        "positive": "Yes",
+        "negative": "No",
+        "membership_basis": null
+      },
+      "policy": {
+        "penalty_discount_percent": 100,
+        "discount_basis": "eligible_penalty_only",
+        "principal_discount_percent": 0,
+        "interest_discount_percent": 0,
+        "source": "结构示例；正式政策需由使用者核实并提供依据",
+        "bucket_definition": "未在本配置核实，不由M段名称推断边界"
+      },
+      "analysis": {
+        "dimensions": [
+          "amount",
+          "overdue_days",
+          "amount_x_overdue_days",
+          "date",
+          "call_count",
+          "duration"
+        ],
+        "metrics": [
+          "list_membership_rate"
+        ],
+        "case_review_count": 8
+      },
+      "testset": {
+        "real_count": 200,
+        "synthetic_count": 100,
+        "seed": 42,
+        "max_per_call": 1,
+        "role_labels": {
+          "user": "用户",
+          "assistant": "客服"
+        },
+        "synthetic_path": null
+      },
+      "evaluation": {
+        "mode": "generate",
+        "archive": null,
+        "baseline": null,
+        "candidate": null,
+        "suite_version": null,
+        "fixture": {},
+        "fixture_source": null,
+        "rubric": null,
+        "rubric_version": null
+      },
+      "multiturn": {
+        "user_endpoint": "http://112.13.90.15:60035/v1/chat/completions",
+        "persona_path": null,
+        "start_mode": "scenario_seed",
+        "repeats": 3,
+        "max_service_turns": 12,
+        "timeout_seconds": 600,
+        "end_markers": []
+      },
+      "iteration": {
+        "parent_path": null,
+        "target_version": null,
+        "prompt_dir": "./prompts/m3-penalty100"
+      }
+    }
+  ]
+}
