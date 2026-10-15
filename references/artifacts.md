@@ -1,6 +1,8 @@
 # 产物、组合与恢复
 
-建议运行目录：`output_root/project_id/run_id/scene_id/step/`。run_id使用时间戳加随机后缀避免碰撞。原始导出归场景data_dir；运行目录存引用/hash及派生结果。
+场景配置包含 `outputs` 时，以所选模块的显式目录为准：报告归report_dir、证据归evidence_dir、运行归run_dir、测试集归output_dir、Prompt归prompt_dir。新批次在对应根目录内创建唯一子目录；共享目录的文件名包含场景、版本与运行标识。已有固定测试集只复用，不覆盖。
+
+未配置模块目录时，回退到 `output_root/project_id/run_id/scene_id/step/`。run_id使用时间戳加随机后缀避免碰撞。原始导出归场景data_dir；运行目录存引用/hash及派生结果。不能把legacy场景的产物另迁到通用运行目录。
 
 每模块manifest字段：schema_version、run_id、scene_id、step、status、started_at、finished_at、effective_config_hash、inputs[{path,sha256,role,coverage}]、outputs[{path,sha256,role}]、counts、limitations、next_actions。网络模块另记接口文档hash、请求/响应索引、model快照、参数hash、预算消耗与重试。日期有timezone；未知时保留原字符串和unknown，不猜转换。
 

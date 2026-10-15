@@ -39,7 +39,7 @@
 
 ## 配置示例的地位
 
-`scene-template.json`是待填写模板，不能直接执行正式任务。分享包的`okash.json`保存六组结构和NG规则，真实项目值、Token及名单依据须由使用者填写，evaluation/iteration保留待选版本。M2减免组没有基线也可以导出；缺少基线仅阻塞该组评测/迭代。实际是否有数据每次查证，不永久跳过。
+`scene-template.json`是待填写模板，不能直接执行正式任务。分享包的`okash.json`保留六组结构和NG规则，实际项目值、Token及名单依据需使用者填写，evaluation/iteration保留待选版本。M2减免组没有基线也可以导出；缺少基线仅阻塞该组评测/迭代。实际是否有数据每次查证，不永久跳过。
 
 单轮样本数量、语言、名单标签和评分维度均可改。更改测试集、角色、量表或业务夹具要生成新版本，不能与旧条件混算。业务参数使用字面量模板替换，保留变量大小写，不执行模板代码。新增变量需供值方、类型及缺失行为；同一对照共同业务条件一致。
 
@@ -48,3 +48,18 @@
 复制scene-template.json后，先填写项目/场景身份、输入与目标事件，再填写所选模块的字段。`interfaces.api_document`原本相对技能assets目录；单独移动配置文件时，将它改为当前接口文档的绝对路径（使用者自己的接口文档位置），或同步复制文档并更新相对路径。不要直接执行含null的通用模板。
 
 运行检查工具的退出码：0表示可进入代理的内容核验，1表示选定步骤有缺口，2表示配置/接口合同无效；三者都没有执行后台或模型请求。`ready_for_agent_verification`不是业务完成，也不保证输入文件内容合格。
+
+## 沿用原技能目录
+
+`layout_mode=legacy` 时，`scenes[].outputs` 保存各模块目标目录，优先于output_root：
+
+- extract：calls_dir、outcomes_dir。
+- annotate：output_dir、backup_dir、audit_dir、write_mode（默认copy；原地更新须符合本次授权）。
+- analyze：report_dir、evidence_dir。
+- testset：output_dir、existing_suite_policy。
+- evaluate / multiturn：run_dir、report_dir。
+- iterate：prompt_dir、record_dir；未选定Prompt分支时不能自行落入其他分支。
+
+`history.catalog_path` 是已有产物目录；archive_pointer是ZIP清单入口。每个文件记录原路径及hash。运行前检查原件存在且hash未变，变化时重建本次快照，不能把旧索引当永久真相。后续新增文件在用户指定场景目录内重新发现，核验完整项目值后才更新输入列表。
+
+候选版本、目标版本等未选定值不因历史接续而自动填成最新版。使用者可在本地预设中连接历史数据、身份映射、固定测试集与历史分析报告；公开模板不含这些真实路径，零记录占位应单独登记。另项目文件即使位于同一组目录，也仅进入历史候选，不自动继承名单。历史索引仅留本地，不加入公开分享包。
