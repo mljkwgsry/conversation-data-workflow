@@ -1,18 +1,18 @@
-# 原技能迁移对照
+# 已有项目接入
 
-| 原独立技能 | 通用模块 | 参数迁移 |
+本工作流自包含；不要求安装或保留其他专用Skill。若已有数据处理项目，可按以下合同接入。
+
+| 现有产物 | 接入位置 | 复用前检查 |
 |---|---|---|
-| okash-call-export | extract(calls) | 项目、数据源、范围、目录 |
-| okash-repayment-export | extract(outcomes) | Token、事件含义、时间、目录 |
-| okash-repayment-mark | annotate | 身份键/电话规则、名单含义、标注列 |
-| opay-collection-analysis | analyze | 字段、指标、维度、场景案例 |
-| call-asr-testset | testset | ASR结构、角色、数量、语言、模拟库 |
-| opay-prompt-evaluation | evaluate | 场景数、版本、夹具、评分、固定集 |
-| opay-multiturn-evaluation | multiturn | 角色、起始方式、轮次、重复、预算 |
-| opay-prompt-iteration | iterate | 父版本、目标版本、业务规则、证据 |
+| 通话CSV | inputs.calls | 实际字段、ASR结构、场景归属和时间覆盖 |
+| 业务结果名单 | inputs.outcomes | 事件含义、客户关联键和来源依据 |
+| 已核验身份映射 | inputs.identity_map | 数据源、场景和完整复合键、未解决项 |
+| 固定单轮测试集 | inputs.testset | 两列格式、唯一ID、来源记录及hash |
+| 多轮场景库 | inputs.suite及persona_path | 角色事实、可见前缀、状态合同和版本 |
+| 既有分析报告 | inputs.report | 来源文件、适用场景、证据与限制 |
+| 原始评测回复 | evaluation.archive | 原请求响应、实际配置、Prompt与测试集hash |
+| Prompt正文 | evaluation或iteration路径 | 版本与分支、变量、输出约定及正文hash |
 
-旧技能未删除或改写，保留旧调用兼容。新入口内模块可单独选择；这些模块是统一skill的步骤，不是另外七个需要安装的skill。旧技能的四组/六组、品牌、日期、确认记录不覆盖新配置。
+原文件不必搬迁。用outputs保留项目目录结构，用history索引定位产物；详见[历史复用](history-reuse.md)。原始证据缺失时记录限制，不能只凭文件名宣称同条件可比。
 
-独立脚本analyze.py含业务特定规则，不直接作为通用分析执行器；旧测试集脚本也需确认解析格式和数量参数才复用。本包是代理执行的完整工作流+离线配置规划器，不宣称已有一键联网执行引擎。
-
-通用接口来源：本地AI模型调用接口文档快照gateway-api-source.md；操作依据为八个原技能。新增业务只需配置场景与证据规则；后台表结构或网关协议变化需要单独适配并验证。
+若复用项目自己的脚本，先验证字段、默认值、输入/输出与运行副作用；未验证的业务特定脚本不视为本工作流执行器。其他工具的升级不会自动改变本包内部规范。

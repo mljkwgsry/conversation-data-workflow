@@ -10,7 +10,7 @@ description: Use when 用户需要针对可配置业务场景进行外呼或客�
 ## 入口与范围
 
 1. 解析用户指定的 `config`、`scenes`、`steps`、输入文件及版本。仅做技能整理不执行业务任务。只执行用户选定模块；缺少上游产物时先查已有合格产物，不能自动扩大到后台查询或模型调用。
-2. 读取 [配置说明](references/configuration.md)。新业务从 [通用配置](assets/scene-template.json) 复制；OKash可选 [六组结构示例（需填写查询配置）](assets/okash.json)，必须显式选择，不能因工作目录在opayM2就默认套用。配置空值表示未确认，不是任意默认。
+2. 读取 [配置说明](references/configuration.md)。新业务从 [通用配置](assets/scene-template.json) 复制；OKash可选 [六组结构示例（需填写查询配置）](assets/okash.json)，必须显式选择，不能根据工作目录名称默认套用。配置空值表示未确认，不是任意默认。
 3. 用 `python3 <技能目录>/scripts/prepare_run.py --config <配置路径> --steps annotate,analyze --scenes <场景ID>` 离线检查并输出步骤与缺口。检查工具不联网、不执行模块，也不证明数据真实；实际模块由代理按下表执行。绝对路径或相对配置文件所在目录的路径均可。
 4. 应用优先级：用户本轮明确要求 > 本轮已确认配置 > 所选场景配置 > 全局配置。记录覆盖差异，冻结本次有效配置。通用流程无OKash、国家、M段或减免组默认。
 5. 配置包含 `layout_mode=legacy` 或 `history` 时，先读 [原目录接续与历史复用](references/history-reuse.md)，按 `scenes[].outputs` 沿用原目录，从历史索引定位原件，不先解压或重跑。
@@ -46,6 +46,6 @@ description: Use when 用户需要针对可配置业务场景进行外呼或客�
 
 “使用 $conversation-data-workflow，把预约回访场景的字段、名单事件和评价标准填入新配置，接口沿用现有Gateway，只准备配置。”
 
-旧技能保持原样，旧名字仍能单独使用；新业务统一用本入口。来源与迁移对应见 [迁移表](references/migration.md)。
+本包的模块规范可以独立使用，不依赖其他业务专用Skill。接入既有项目时，阅读 [已有项目接入](references/migration.md)。
 
 首次安装、模块详解与组合示例见 [README](README.md)。
