@@ -63,3 +63,12 @@
 `history.catalog_path` 是已有产物目录；archive_pointer是ZIP清单入口。每个文件记录原路径及hash。运行前检查原件存在且hash未变，变化时重建本次快照，不能把旧索引当永久真相。后续新增文件在用户指定场景目录内重新发现，核验完整项目值后才更新输入列表。
 
 候选版本、目标版本等未选定值不因历史接续而自动填成最新版。使用者可在本地预设中连接历史数据、身份映射、固定测试集与历史分析报告；公开模板不含这些真实路径，零记录占位应单独登记。另项目文件即使位于同一组目录，也仅进入历史候选，不自动继承名单。历史索引仅留本地，不加入公开分享包。
+
+
+## 多轮生成与分析拆分
+
+`multiturn`只产出轨迹，不产出report。默认`multiturn.user_mode=assistant_direct`，此模式不要求用户模型endpoint；显式external_model沿用现有Gateway。生成阶段不要求evaluation.rubric/rubric_version，配置已包含时可保留供分析使用。
+
+`analyze`分析多轮时，在原evaluation.rubric/rubric_version字段声明量表，输入为上游multiturn产物或`inputs.multiturn_archive`（已有manifest/analysis-input.json文件）。兼容方式为`analysis.input_type=multiturn`并使用`evaluation.archive`。无需calls、fields.asr、role_labels或模型接口文档；实际执行仍须核验完整轨迹。multiturn的rejudge请求转analyze，不能重新调用模型。
+
+组合顺序：multiturn → analyze → iterate。只做multiturn不能满足iterate的report前置条件。Gateway接口字段、旧目录与既有原始文件不变。

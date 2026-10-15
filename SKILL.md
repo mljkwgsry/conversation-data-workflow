@@ -22,13 +22,15 @@ description: Use when 用户需要针对可配置业务场景进行外呼或客�
 |---|---|---|---|
 | extract | 导出通话、业务结果名单 | 数据源/筛选/时间 → 原始CSV及导出清单 | [提取](references/extract.md) |
 | annotate | 名单映射与记录标注 | 通话、名单、身份映射 → 标注CSV及证据 | [标注](references/annotate.md) |
-| analyze | 质量、业务与对话分析 | 原始或标注数据 → 独立HTML/指标/案例 | [分析](references/analyze.md) |
+| analyze | 质量、业务与对话分析 | 原始/标注数据或多轮轨迹 → 评分/独立HTML/指标/案例 | [分析](references/analyze.md) |
 | testset | 真实样本及模拟测试集 | ASR/角色映射/覆盖目标 → 冻结测试集 | [测试集](references/testset.md) |
 | evaluate | 单轮模型评测或历史重评 | 测试集、版本、业务夹具 → 逐条输出与报告 | [评测](references/evaluate.md) |
-| multiturn | 角色模拟多轮评测 | 场景库、角色、版本 → 逐轮与会话报告 | [多轮](references/multiturn.md) |
+| multiturn | 角色扮演与轨迹生成 | 场景库、角色、版本 → 原始逐轮轨迹/状态/分析交接 | [多轮](references/multiturn.md) |
 | iterate | 根据证据生成完整Prompt候选 | 父版本、报告 → 新版本/diff/回归用例 | [迭代](references/iterate.md) |
 
-组合示例：`extract → annotate → analyze → iterate`；`testset → evaluate → iterate`；`multiturn → iterate`。步骤按用户给定顺序执行，重复迭代轮次用新的运行；没有自动无限优化循环。单独分析可无标注，单独迭代可直接使用既有报告，历史重评不重新生成模型输出。
+多轮职责固定拆分：`multiturn`只生成和归档对话，`analyze`评分并出报告。OKash接续项目分别调用 `opay-multiturn-evaluation` 与 `opay-collection-analysis`；其他配置业务使用对应模块规范。用户明确“只跑角色扮演”只执行前者；完整“多轮评测并出报告”执行两步；只分析已有轨迹直接执行analyze。
+
+组合示例：`extract → annotate → analyze → iterate`；`testset → evaluate → iterate`；`multiturn → analyze → iterate`。步骤按用户给定顺序执行，重复迭代轮次用新的运行；没有自动无限优化循环。单独分析可无标注，单独迭代可直接使用既有报告，历史重评不重新生成模型输出。
 
 ## 共同合同
 
@@ -46,6 +48,9 @@ description: Use when 用户需要针对可配置业务场景进行外呼或客�
 
 “使用 $conversation-data-workflow，把预约回访场景的字段、名单事件和评价标准填入新配置，接口沿用现有Gateway，只准备配置。”
 
-本包的模块规范可以独立使用，不依赖其他业务专用Skill。接入既有项目时，阅读 [已有项目接入](references/migration.md)。
+本包的模块规范可以独立使用；已安装业务专用Skill时按上述路由调用，未安装时执行本包对应模块规范。接入既有项目时，阅读 [已有项目接入](references/migration.md)。
 
 首次安装、模块详解与组合示例见 [README](README.md)。
+
+
+催收分析与评测每次报告必读[统一分析与评分准则](references/collection-analysis-criteria.md)的固定报告评分口径，使用用户指定飞书报告与SOP评价方式。

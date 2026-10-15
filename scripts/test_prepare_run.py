@@ -76,6 +76,44 @@ class PreflightTests(unittest.TestCase):
         r = self.run_plan(['analyze', 'extract'])
         self.assertEqual(r['plan'][0]['status'], 'needs_input')
 
+    def setup_multiturn(self):
+        self.scene['inputs']['suite'] = 'report.json'
+        self.scene['evaluation'].update(mode='generate', baseline='report.json', candidate='report.json', fixture_source='frozen', rubric={}, rubric_version=None)
+        self.cfg['interfaces']['api_document'] = 'report.json'
+        self.cfg['execution']['max_requests'] = 10
+        self.scene['multiturn'].update(user_mode='assistant_direct', user_endpoint=None, persona_path='report.json', repeats=1, max_service_turns=3, timeout_seconds=10)
+        self.scene['iteration'].update(parent_path='report.json', target_version='V2', prompt_dir='output')
+
+    def test_roleplay_does_not_produce_report_or_require_rubric(self):
+        self.setup_multiturn()
+        r = self.run_plan(['multiturn', 'iterate'])
+        self.assertEqual(r['plan'][0]['status'], 'ready_for_agent_verification')
+        self.assertEqual(r['plan'][1]['status'], 'needs_input')
+
+    def test_roleplay_analysis_chain_without_calls(self):
+        self.setup_multiturn()
+        self.scene['inputs']['calls'] = []
+        self.scene['fields'] = {}
+        self.scene['evaluation'].update(rubric={'uptake': '0-2'}, rubric_version='v1')
+        r = self.run_plan(['multiturn', 'analyze', 'iterate'])
+        self.assertEqual(r['status'], 'ready_for_agent_verification')
+
+    def test_failed_roleplay_cannot_fall_back_to_unrelated_calls(self):
+        self.setup_multiturn()
+        self.scene['inputs']['suite'] = 'missing.json'
+        self.scene['evaluation'].update(rubric={'uptake': '0-2'}, rubric_version='v1')
+        r = self.run_plan(['multiturn', 'analyze', 'iterate'])
+        self.assertTrue(all(x['status'] == 'needs_input' for x in r['plan']))
+
+    def test_saved_roleplay_analysis_without_network_or_calls(self):
+        self.scene['inputs'] = {'multiturn_archive': 'report.json'}
+        self.scene['fields'] = {}
+        self.cfg['interfaces']['api_document'] = 'missing.md'
+        self.scene['evaluation'].update(rubric={'uptake': '0-2'}, rubric_version='v1')
+        self.assertEqual(self.run_plan(['analyze'])['status'], 'ready_for_agent_verification')
+        self.scene['inputs']['multiturn_archive'] = 'missing.json'
+        self.assertEqual(self.run_plan(['analyze'])['status'], 'needs_input')
+
     def test_no_mutation(self):
         before = copy.deepcopy(self.cfg)
         self.run_plan(['annotate', 'analyze'])

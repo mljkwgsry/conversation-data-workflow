@@ -102,6 +102,22 @@ def prepare(config, config_path, steps, selected=None):
                     missing.append('identity.kind must be phone or exact_id')
                 if not missing:
                     produced.add('annotated_calls')
+            elif step == 'analyze' and (
+                scene.get('analysis', {}).get('input_type') == 'multiturn'
+                or 'multiturn_archive' in produced or inputs.get('multiturn_archive')
+                or any(p['step'] == 'multiturn' for p in plan if p['scene_id'] == scene['id'])
+            ):
+                ev = scene.get('evaluation', {})
+                if 'multiturn_archive' not in produced:
+                    if inputs.get('multiturn_archive'):
+                        artifact('multiturn_archive')
+                    elif not exists(ev.get('archive')):
+                        missing.append('existing multiturn manifest or analysis-input index')
+                need(ev.get('rubric'), 'evaluation.rubric for analysis')
+                need(ev.get('rubric_version'), 'evaluation.rubric_version for analysis')
+                warnings.append('Analyze saved trajectories only; verify complete history and fixture; no model calls')
+                if not missing:
+                    produced.add('report')
             elif step in ('analyze', 'testset'):
                 artifact('calls')
                 need(scene.get('fields', {}).get('asr'), 'fields.asr')
@@ -125,6 +141,8 @@ def prepare(config, config_path, steps, selected=None):
                 ev = scene.get('evaluation', {})
                 if ev.get('mode') not in ('generate', 'rejudge'):
                     missing.append('evaluation.mode must be generate or rejudge')
+                if step == 'multiturn' and ev.get('mode') == 'rejudge':
+                    missing.append('multiturn only generates trajectories; use analyze for rejudge')
                 if ev.get('mode') == 'rejudge':
                     if not exists(ev.get('archive')):
                         missing.append('evaluation.archive must be an existing archive index file')
@@ -138,7 +156,9 @@ def prepare(config, config_path, steps, selected=None):
                         missing.append('interfaces.api_document existing file')
                     if step == 'multiturn':
                         mt = scene.get('multiturn', {})
-                        if mt.get('user_endpoint') != INTERFACES['gateway_base_url'] + '/v1/chat/completions':
+                        if mt.get('user_mode', 'assistant_direct') not in ('assistant_direct', 'external_model'):
+                            missing.append('multiturn.user_mode must be assistant_direct or external_model')
+                        if mt.get('user_mode', 'assistant_direct') == 'external_model' and mt.get('user_endpoint') != INTERFACES['gateway_base_url'] + '/v1/chat/completions':
                             missing.append('multiturn.user_endpoint must preserve current Gateway')
                         if not exists(mt.get('persona_path')):
                             missing.append('multiturn.persona_path existing file')
@@ -148,10 +168,11 @@ def prepare(config, config_path, steps, selected=None):
                         if not budget:
                             missing.append('execution.max_requests for bounded multiturn generation')
                     warnings.append('Requires actual model discovery, variable/schema checks and authorized network execution')
-                need(ev.get('rubric'), 'evaluation.rubric')
-                need(ev.get('rubric_version'), 'evaluation.rubric_version')
+                if step == 'evaluate':
+                    need(ev.get('rubric'), 'evaluation.rubric')
+                    need(ev.get('rubric_version'), 'evaluation.rubric_version')
                 if not missing:
-                    produced.add('report')
+                    produced.add('multiturn_archive' if step == 'multiturn' else 'report')
             elif step == 'iterate':
                 artifact('report')
                 it = scene.get('iteration', {})
